@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "后台管理系统",
+  "navigationBarTitleText": "博文典藏（小朱钱币）",
   "usingComponents": {
     "uni-forms": "/uni_modules/uni-forms/components/uni-forms/uni-forms",
     "uni-forms-item": "/uni_modules/uni-forms/components/uni-forms-item/uni-forms-item",

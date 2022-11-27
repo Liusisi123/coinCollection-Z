@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 
 Vue.config.productionTip = false
+Vue.prototype.$baseUrl="http://170.106.8.145:3000"  //线上接口
 
 App.mpType = 'app'
 
