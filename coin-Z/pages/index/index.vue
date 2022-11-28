@@ -14,7 +14,7 @@
 				<button @click="seach" class="jump-next" size="mini" type="primary">搜索</button>
 			<!-- </navigator> -->
 		</view>
-		<uni-table ref="table" border stripe type="selection" @selection-change="selectionChange">
+		<uni-table style="height: 30%;" ref="table" border stripe type="selection" @selection-change="selectionChange">
 			<uni-tr>
 				<uni-th width="150" align="center">url</uni-th>
 				<uni-th width="150" align="center">商品图片</uni-th>
@@ -56,8 +56,11 @@
 				show-icon 
 				:page-size="pageSize" 
 				:current="pageCurrent" 
-				:total="total" 
+				:total="total" 	
 				@change="change" />
+				<view>
+					<text class="example-info">当前页：{{ pageCurrent }}，数据总量：{{ total }}条，每页数据：{{ pageSize }}</text>
+				</view>
 		</view>
 	</view>
 </template>
