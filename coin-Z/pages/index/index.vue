@@ -34,7 +34,7 @@
 				<uni-td align="center">
 					<image style="width: 60px;height: 60px;" :src="item.mainUrl" mode=""></image>
 				</uni-td>
-				<uni-td align="center">{{ item.id }}</uni-td>
+				<uni-td align="center">{{ item.spuCode }}</uni-td>
 				<uni-td align="center">{{ item.spuName }}</uni-td>
 				<uni-td align="center">{{ item.price }}</uni-td>
 				<uni-td align="center">{{ item.title }}</uni-td>
@@ -45,8 +45,8 @@
 				<uni-td align="center">{{ item.status }}</uni-td>
 				<uni-td align="center">
 					<view class="uni-group">
-						<button class="uni-button" size="mini" type="primary" @click="edit">修改</button>
-						<button class="uni-button" size="mini" type="warn">删除</button>
+						<button class="uni-button" size="mini" type="primary" @click="edit(item.spuCode)">修改</button>
+						<button class="uni-button" size="mini" type="warn" @click="deleteBut(item.spuCode)">删除</button>
 					</view>
 				</uni-td>
 			</uni-tr>
@@ -91,7 +91,8 @@
 				          method: 'GET',
 				          success: (res)=>{
 							  console.log("res",res)
-							  this.tableData = res.data
+							  this.tableData = res.data.data
+							  this.total = res.data.total
 						  },
 				          fail: (err)=>{}
 				    })  
@@ -105,9 +106,35 @@
 					}
 				})
 			},
-			edit(){
-				console.log("0000")
+			edit(spuCode){
+				console.log("spuCode")
+				uni.navigateTo({
+					url:`add/add?id=${spuCode}`,
+					fail: (error) => {
+						console.log(error)
+					}
+				})
 			},
+			deleteBut(spuCode){
+				console.log("spuCode",spuCode)
+				let params = {
+				         "spuCode":spuCode,
+									}
+				uni.request({
+						url: `${this.$baseUrl}/spu/delete`,
+						method: 'POST',
+						data:params,
+						success: (res)=>{
+							if(res){
+								uni.showToast({
+									title: '删除成功'
+								})
+								this.seach()
+							}
+						},
+						fail: (err)=>{}
+				})
+			}
 		}
 	}
 </script>

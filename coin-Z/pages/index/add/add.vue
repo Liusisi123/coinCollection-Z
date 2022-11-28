@@ -8,8 +8,8 @@
 			<uni-forms-item label="价格:" name="price">
 				<uni-easyinput style="width: 200px" type="text" v-model="form.price" placeholder="请输入价格"></uni-easyinput>
 			</uni-forms-item>
-			<uni-forms-item label="标题:" name="title">
-				<uni-easyinput style="width: 200px" type="text" v-model="form.title" placeholder="请输入标题"></uni-easyinput>
+			<uni-forms-item label="标题:" name="desc">
+				<uni-easyinput style="width: 200px" type="text" v-model="form.desc" placeholder="请输入标题"></uni-easyinput>
 			</uni-forms-item>
 			<uni-forms-item label="所属分类:" name="type">
 				<uni-data-select
@@ -44,28 +44,37 @@
 				]
 			}
 		},
+		mounted() {
+			
+		},
+		onLoad(option) {
+			console.log("id",option.id);
+		},
 		methods: {
-			change(e) {
+			change(e) {	
 			      console.log("e:", e);
 			    },
 			addSub(){
 				 let params = {
 				          "spuName":this.form.spuName,
 				          "price":this.form.price,
-				          "title":this.form.title,
-				          "type":this.form.type,
+				          "desc":this.form.desc,
+				          // "type":this.form.type,
 					}
 					uni.request({
 							url: `${this.$baseUrl}/spu/create`,
 							method: 'POST',
 							data:params,
 							success: (res)=>{
-								if(res.statusCode == 0){
+								if(res){
 									uni.showToast({
 										title: '新增成功'
 									})
-									uni.navigateTo({
-										url:'index'
+									// uni.navigateTo({
+									// 	url:'index/index'
+									// })
+									uni.navigateBack({
+										delta:1,
 									})
 								}
 							},
