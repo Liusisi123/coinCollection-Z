@@ -29,4 +29,7 @@
 		color: #333;
 		padding: 10px;
 	}
+	/* #ifdef H5 */ 
+	uni-page-head { display: none; } 
+	/* #endif */
 </style>

@@ -1,19 +1,19 @@
 <template>
 	<view class="view">
-		<uni-forms :modelValue="formData" label-position="top" :inline="true">
-			<uni-forms-item label="姓名:" name="name">
-				<uni-easyinput style="width: 200px" type="text" v-model="formData.name" placeholder="请输入姓名"></uni-easyinput>
+		<uni-forms :modelValue="formData" label-position="left" :inline="true" label-width="80px">
+			<uni-forms-item label="商品名称:" name="spuName">
+				<uni-easyinput style="width: 200px" type="text" v-model="formData.spuName" placeholder="请输入商品名称"></uni-easyinput>
 			</uni-forms-item>
-			<uni-forms-item label="性别:" name="name">
-				<uni-easyinput style="width: 200px" type="text" v-model="formData.name" placeholder="请输入姓名"></uni-easyinput>
+			<uni-forms-item label="标题:" name="price">
+				<uni-easyinput style="width: 200px" type="text" v-model="formData.price" placeholder="请输入标题"></uni-easyinput>
 			</uni-forms-item>
 		</uni-forms>
-		<view class="jump-next-area" style="margin:15px">
+		<view class="jump-next-area">
 				<button @click="jumpSecondPage" class="jump-next" size="mini" type="primary">新增</button>
 				<button @click="seach" class="jump-next" size="mini" type="primary">搜索</button>
 		</view>
 		<view class="content">
-			<uni-table style="height: 475px;" ref="table" border stripe type="selection" @selection-change="selectionChange">
+			<uni-table ref="table" border stripe type="selection" @selection-change="selectionChange">
 					<uni-tr>
 						<uni-th width="150" align="center">url</uni-th>
 						<uni-th width="150" align="center">商品图片</uni-th>
@@ -31,7 +31,7 @@
 					<uni-tr v-for="(item, index) in showTableData" :key="index">
 						<uni-td align="center">{{ item.url }}</uni-td>
 						<uni-td align="center">
-							<image style="width: 60px;height: 60px;" :src="item.mainUrl" mode=""></image>
+							<image style="width: 120rpx;height: 120rpx;" :src="item.mainUrl" mode=""></image>
 						</uni-td>
 						<uni-td align="center">{{ item.spuCode }}</uni-td>
 						<uni-td align="center">{{ item.spuName }}</uni-td>
@@ -44,7 +44,7 @@
 						<uni-td align="center">{{ item.status }}</uni-td>
 						<uni-td align="center">
 							<view class="uni-group">
-								<button class="uni-button" size="mini" type="primary" @click="edit(item.spuCode)">修改</button>
+								<button class="uni-button" size="mini" type="primary" @click="edit(item)">修改</button>
 								<button class="uni-button" size="mini" type="warn" @click="deleteBut(item.spuCode)">删除</button>
 							</view>
 						</uni-td>
@@ -79,14 +79,17 @@
 				searchVal: '',
 				title: 'index',
 				formData: {
-					name: ""
+					spuName: "",
+					price: ""
 				},
 				
 			}
 		},
+		onShow(){
+		    this.getData();
+		},
 		onLoad() {
-				this.selectedIndexs = []
-				this.getData(1)
+			this.selectedIndexs = []
 			},
 		mounted() {
 			this.getData()
@@ -101,17 +104,13 @@
 		 getShowTableData() {
 			  // 5. 获取截取开始索引
 			  let begin = (this.pageIndex - 1) * this.pageSize;
-			  console.log("begin",begin);
 			  // 6. 获取截取结束索引
 			  let end = this.pageIndex * this.pageSize;
-			  console.log("end",end);
 			  // 7. 通过索引去截取，从而展示
 			  this.showTableData = this.tableData.slice(begin, end);
-			  console.log("this.showTableData",this.showTableData);
 			},
 			// 8. 页数改变，重新截取
 			handleCurrentChange(e) {
-				console.log("e",e);
 			  this.pageIndex = e.current;
 			  this.getShowTableData();
 			},
@@ -121,7 +120,6 @@
 			},
 			// 多选
 			selectionChange(e) {
-				console.log(e.detail.index)
 				this.selectedIndexs = e.detail.index
 			},
 			//批量删除
@@ -129,11 +127,11 @@
 				console.log(this.selectedItems())
 			},
 			// 分页触发
-			change(e) {
-				this.$refs.table.clearSelection()
-				this.selectedIndexs.length = 0
-				this.getData(e.current)
-			},
+			// change(e) {
+			// 	this.$refs.table.clearSelection()
+			// 	this.selectedIndexs.length = 0
+			// 	this.getData(e.current)
+			// },
 			seach(){
 				this.pageIndex = 1,
 				this.getData()
@@ -165,10 +163,10 @@
 					}
 				})
 			},
-			edit(spuCode){
-				console.log("spuCode")
+			edit(item){
+				console.log("item",item)
 				uni.navigateTo({
-					url:`add/add?id=${spuCode}`,
+					url:`add/add?item=${encodeURIComponent(JSON.stringify(item))}`,
 					fail: (error) => {
 						console.log(error)
 					}
@@ -200,21 +198,11 @@
 
 <style>
 .view{
-	margin:10px
+	margin: 1rem;
 }
 .content{
 		/* width: 750rpx; */
 		font-family: PingFang SC-Regular, PingFang SC;
-	}
-	/* 表格标题固定定位 */
-	.table_head{
-		position: fixed;
-		margin-top: 50px;
-		/* top: 0; */
-		left: 0;
-	}
-	.table_body{
-		margin-top: 100px;
 	}
 	/* 底部 */
 	.footer{
