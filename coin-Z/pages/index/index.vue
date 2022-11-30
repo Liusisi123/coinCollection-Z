@@ -8,11 +8,9 @@
 				<uni-easyinput style="width: 200px" type="text" v-model="formData.name" placeholder="请输入姓名"></uni-easyinput>
 			</uni-forms-item>
 		</uni-forms>
-		<view class="jump-next-area" >
-			<!-- <navigator url="add/add?title=add" hover-class="navigator-hover"> -->
+		<view class="jump-next-area" style="margin:15px">
 				<button @click="jumpSecondPage" class="jump-next" size="mini" type="primary">新增</button>
 				<button @click="seach" class="jump-next" size="mini" type="primary">搜索</button>
-			<!-- </navigator> -->
 		</view>
 		<view class="content">
 			<uni-table style="height: 475px;" ref="table" border stripe type="selection" @selection-change="selectionChange">
@@ -30,7 +28,7 @@
 						<uni-th align="center">商品状态</uni-th>
 						<uni-th width="204" align="center">设置</uni-th>
 					</uni-tr>
-					<uni-tr v-for="(item, index) in tableData" :key="index">
+					<uni-tr v-for="(item, index) in showTableData" :key="index">
 						<uni-td align="center">{{ item.url }}</uni-td>
 						<uni-td align="center">
 							<image style="width: 60px;height: 60px;" :src="item.mainUrl" mode=""></image>
@@ -41,8 +39,8 @@
 						<uni-td align="center">{{ item.title }}</uni-td>
 						<uni-td align="center">{{ item.desc }}</uni-td>
 						<uni-td align="center">{{ item.type }}</uni-td>
-						<uni-td align="center">{{ item.create_time | formatDate }}</uni-td>
-						<uni-td align="center">{{ item.update_time | formatDate }}</uni-td>
+						<uni-td align="center">{{ item.create_time | t }}</uni-td>
+						<uni-td align="center">{{ item.update_time | t }}</uni-td>
 						<uni-td align="center">{{ item.status }}</uni-td>
 						<uni-td align="center">
 							<view class="uni-group">
@@ -54,96 +52,112 @@
 			</uni-table>
 			<view class="footer uni-pagination-box">
 				<uni-pagination 
-					show-icon 
-					:page-size="pageSize" 
-					:current="pageCurrent" 
-					:total="total" 	
-					@change="change" />
-					<view>
-						<text class="example-info">当前页：{{ pageCurrent }}，数据总量：{{ total }}条，每页数据：{{ pageSize }}</text>
-					</view>
+					show-icon
+				    @change="handleCurrentChange"
+				    :current="pageIndex"
+				    :page-size="pageSize"
+				    :total="total"
+					/>
 			</view>
 		</view>
 	</view>
 </template>
 
-<script>
+<script> 
+	function getTime(time){
+		let d = new Date(time);
+		return d.getFullYear() +'-'+ (d.getMonth()+1) +'-'+ d.getDate()+ ' ' + d.getHours() + ":" + d.getMinutes() +":"+ d.getSeconds();
+	}
 	export default {
 		data() {
 			return {
+				pageIndex: 1, // 第几页
+				pageSize: 5, // 每页几条数据
+				total: 0, // 总条目数
+				tableData: [], // 所有的数据
+				showTableData: [], // 当前展示的数据
+				searchVal: '',
 				title: 'index',
-				total: 0,
-				pageSize: 10,
-				pageCurrent: 1,
 				formData: {
 					name: ""
 				},
-				tableData: [],
+				
 			}
 		},
 		onLoad() {
 				this.selectedIndexs = []
-				this.seach(1)
+				this.getData(1)
 			},
 		mounted() {
-			this.seach()
+			this.getData()
 		},
+		
 		filters: {
-			formatDate: function (cellValue) {
-				console.log("cellValue",cellValue);
-				if (cellValue == null || cellValue == "") return "";
-				  var date = new Date(cellValue)
-				  var year = date.getFullYear()
-				  var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
-				  var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-				  var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
-				  var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
-				  var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
-				  return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
-				// console.log("value",value);
-				// var date = new Date(value);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
-				// console.log("date",date);
-				// var Y = date.getFullYear() + '-';
-				// var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-				// var D = date.getDate() + '-';
-				// var h = date.getHours() + ':';
-				// var m = date.getMinutes() + ':';
-				// var s = date.getSeconds();
-				// return Y+M+D+h+m+s;
+			t(time){
+				return getTime(time)
 			}
 		},
 		methods: {
+		 getShowTableData() {
+			  // 5. 获取截取开始索引
+			  let begin = (this.pageIndex - 1) * this.pageSize;
+			  console.log("begin",begin);
+			  // 6. 获取截取结束索引
+			  let end = this.pageIndex * this.pageSize;
+			  console.log("end",end);
+			  // 7. 通过索引去截取，从而展示
+			  this.showTableData = this.tableData.slice(begin, end);
+			  console.log("this.showTableData",this.showTableData);
+			},
+			// 8. 页数改变，重新截取
+			handleCurrentChange(e) {
+				console.log("e",e);
+			  this.pageIndex = e.current;
+			  this.getShowTableData();
+			},
+			// 多选处理
+			selectedItems() {
+				return this.selectedIndexs.map(i => this.tableData[i])
+			},
+			// 多选
+			selectionChange(e) {
+				console.log(e.detail.index)
+				this.selectedIndexs = e.detail.index
+			},
+			//批量删除
+			delTable() {
+				console.log(this.selectedItems())
+			},
 			// 分页触发
 			change(e) {
 				this.$refs.table.clearSelection()
 				this.selectedIndexs.length = 0
-				this.seach(e.current)
+				this.getData(e.current)
 			},
-			seach(pageCurrent, value = ''){
-				console.log("pageCurrent",pageCurrent);
+			seach(){
+				this.pageIndex = 1,
+				this.getData()
+			},	
+			getData(){
 				let params = {
 				          // "phone":this.userphone,
 				          // "name":this.username
 				
 				    }
-					this.pageCurrent = pageCurrent
+					// this.pageCurrent = pageCurrent
 				    uni.request({
-						// pageSize: this.pageSize,
-						// pageCurrent: pageCurrent,
-						// value: value,
 						  url: `${this.$baseUrl}/spu/findAll`,
 						  method: 'GET',
 						  success: (res)=>{
 							  console.log("res",res)
 							  this.tableData = res.data.data
 							  this.total = res.data.total
-							  console.log("this.tableData",this.tableData);
+							  this.getShowTableData();
 						  },
 						  fail: (err)=>{}
 				    })  
 			},
 			jumpSecondPage(){
-				console.log("jumpSecondPage")
 				uni.navigateTo({
 					url:'add/add',
 					fail: (error) => {
@@ -208,7 +222,7 @@
 		left: 0rpx;
 		bottom: 0rpx;
 		width: 100%;
-		height: 126rpx;
+		height: 106rpx;
 		background: #F5F5F5;
 	}
 </style>
