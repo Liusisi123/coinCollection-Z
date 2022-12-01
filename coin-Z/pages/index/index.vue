@@ -38,7 +38,7 @@
 						<uni-td align="center">{{ item.price }}</uni-td>
 						<uni-td align="center">{{ item.title }}</uni-td>
 						<uni-td align="center">{{ item.desc }}</uni-td>
-						<uni-td align="center">{{ item.type }}</uni-td>
+						<uni-td align="center">{{ item.typeId }}</uni-td>
 						<uni-td align="center">{{ item.create_time | t }}</uni-td>
 						<uni-td align="center">{{ item.update_time | t }}</uni-td>
 						<uni-td align="center">{{ item.status }}</uni-td>
@@ -51,7 +51,7 @@
 					</uni-tr>
 			</uni-table>
 			<view class="footer uni-pagination-box">
-				<uni-pagination 
+				<uni-pagination
 					show-icon
 				    @change="handleCurrentChange"
 				    :current="pageIndex"
@@ -63,7 +63,7 @@
 	</view>
 </template>
 
-<script> 
+<script>
 	function getTime(time){
 		let d = new Date(time);
 		return d.getFullYear() +'-'+ (d.getMonth()+1) +'-'+ d.getDate()+ ' ' + d.getHours() + ":" + d.getMinutes() +":"+ d.getSeconds();
@@ -81,7 +81,7 @@
 				formData: {
 					name: ""
 				},
-				
+
 			}
 		},
 		onLoad() {
@@ -91,7 +91,7 @@
 		mounted() {
 			this.getData()
 		},
-		
+
 		filters: {
 			t(time){
 				return getTime(time)
@@ -137,12 +137,12 @@
 			seach(){
 				this.pageIndex = 1,
 				this.getData()
-			},	
+			},
 			getData(){
 				let params = {
 				          // "phone":this.userphone,
 				          // "name":this.username
-				
+
 				    }
 					// this.pageCurrent = pageCurrent
 				    uni.request({
@@ -155,7 +155,7 @@
 							  this.getShowTableData();
 						  },
 						  fail: (err)=>{}
-				    })  
+				    })
 			},
 			jumpSecondPage(){
 				uni.navigateTo({
