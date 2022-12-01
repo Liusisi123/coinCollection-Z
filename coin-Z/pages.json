@@ -8,7 +8,7 @@
 	{
 		"path": "pages/index/add/add",
 		"style": {
-			"navigationBarTitleText": "新增/编辑",
+			"navigationBarTitleText": "博文典藏（小朱钱币）",
 			"enablePullDownRefresh": false
 		}
 	},{
