@@ -6,7 +6,7 @@
 		<view style="font-size: 16px; font-weight: bold;" class="" v-else>
 			新增
 		</view>
-		<uni-forms :modelValue="form" label-position="left" label-width="80px">
+		<uni-forms :modelValue="form" label-position="left" label-width="100px">
 			<uni-forms-item label="商品名称:" name="spuName">
 				<uni-easyinput style="width: 400rpx" type="text" v-model="form.spuName" placeholder="请输入商品名称"></uni-easyinput>
 			</uni-forms-item>
