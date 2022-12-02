@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { getAliOosClient } from '../../../tool.js';
 	export default {
 		data() {
 			return {
@@ -71,6 +72,84 @@
 			}
 		},
 		methods: {
+			async addSub() {
+				if (this.form.spuCode) {
+					let params = {
+						"spuName": this.form.spuName,
+						"price": this.form.price,
+						"desc": this.form.desc,
+						"spuCode": this.form.spuCode
+						// "type":this.form.type,
+					}
+					uni.request({
+						url: `${this.$baseUrl}/spu/update`,
+						method: 'POST',
+						data: params,
+						success: (res) => {
+							// if(res){
+							uni.showToast({
+								title: '编辑成功'
+							})
+							setTimeout(function() {
+								uni.navigateBack({
+									delta: 1,
+								})
+							}, 2000)
+							// }
+						},
+						fail: (err) => {}
+					})
+		
+				} else {
+					this.form.imgs = this.form.imgs.map((item, index) => {
+						return {
+							imgUrl: item.url
+						}
+					})
+					// const mainUrl = this.form.mainUrl?.length ? this.form.mainUrl[0]?.url : ''
+					console.log('typeof this.form.mainUrl',typeof this.form.mainUrl);
+					if (typeof this.form.mainUrl === 'object') {
+						const client = await getAliOosClient('ruigeactivity');
+						const file = this.form.mainUrl;
+						console.log('file',file);
+						const result = await client.put(
+							'spu-' + this.form.spuName.replace(/\s/g, '-') + '.' +file[0].extname,
+							file[0].file,
+						);
+						console.log('result',result);
+						this.form.mainUrl = [result.name];
+					}
+					let params = {
+						"spuName": this.form.spuName,
+						"price": this.form.price,
+						"desc": this.form.desc,
+						"type": this.form.type,
+						"imgs": this.form.imgs,
+						"mainUrl":this.form.mainUrl[0],
+					}
+					console.log('params',params);
+					uni.request({
+						url: `${this.$baseUrl}/spu/create`,
+						method: 'POST',
+						data: params,
+						success: (res) => {
+							if (res) {
+								uni.showToast({
+									title: '新增成功'
+								})
+								setTimeout(function() {
+									uni.navigateBack({
+										delta: 1,
+									}, 2000)
+								})
+							}
+						},
+						fail: (err) => {
+							console.log('err',err);
+						}
+					})
+				}
+			},
 			// 获取所有类型
 			getTypeRange(){
 				uni.request({
@@ -150,73 +229,7 @@
 				})
 			},
 			
-			addSub() {
-				if (this.form.spuCode) {
-					let params = {
-						"spuName": this.form.spuName,
-						"price": this.form.price,
-						"desc": this.form.desc,
-						"spuCode": this.form.spuCode
-						// "type":this.form.type,
-					}
-					uni.request({
-						url: `${this.$baseUrl}/spu/update`,
-						method: 'POST',
-						data: params,
-						success: (res) => {
-							// if(res){
-							uni.showToast({
-								title: '编辑成功'
-							})
-							setTimeout(function() {
-								uni.navigateBack({
-									delta: 1,
-								})
-							}, 2000)
-							// }
-						},
-						fail: (err) => {}
-					})
-
-				} else {
-					this.form.imgs = this.form.imgs.map((item, index) => {
-						return {
-							imgUrl: item.url
-						}
-					})
-					const mainUrl = this.form.mainUrl?.length ? this.form.mainUrl[0]?.url : ''
-					let params = {
-						"spuName": this.form.spuName,
-						"price": this.form.price,
-						"desc": this.form.desc,
-						"type": this.form.type,
-						"imgs": this.form.imgs,
-						"mainUrl":mainUrl,
-					}
-					uni.request({
-						url: `${this.$baseUrl}/spu/create`,
-						method: 'POST',
-						data: params,
-						success: (res) => {
-							if (res) {
-								uni.showToast({
-									title: '新增成功'
-								})
-								setTimeout(function() {
-									uni.navigateBack({
-										delta: 1,
-									}, 2000)
-								})
-							}
-						},
-						fail: (err) => {
-							console.log('err',err);
-						}
-					})
-
-				}
 			}
-		}
 	}
 </script>
 
