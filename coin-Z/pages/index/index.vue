@@ -27,6 +27,7 @@
 						<uni-th align="center">更新时间</uni-th>
 						<uni-th align="center">商品状态</uni-th>
 						<uni-th width="204" align="center">设置</uni-th>
+						<uni-th align="center">操作</uni-th>
 					</uni-tr>
 					<uni-tr v-for="(item, index) in showTableData" :key="index">
 						<uni-td align="center">{{ item.url }}</uni-td>
@@ -193,10 +194,10 @@
 </script>
 
 <style>
-.view{
-	margin: 1rem;
-}
-.content{
+	.view{
+		margin: 1rem;
+	}
+	.content{
 		/* width: 750rpx; */
 		font-family: PingFang SC-Regular, PingFang SC;
 	}

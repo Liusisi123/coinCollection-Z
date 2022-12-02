@@ -26,16 +26,15 @@
 			</uni-forms-item>
       <uni-forms-item label="上传详情图:" name="type">
 				<uni-file-picker
-          v-model="form.imgs"
-          fileMediatype="image"
-          mode="grid"
-          @select="select"
-          @progress="progress"
-          @success="success"
-          @fail="fail"
-        />
+				  v-model="form.imgs"
+				  fileMediatype="image"
+				  mode="grid"
+				  @select="select"
+				  @progress="progress"
+				  @success="success"
+				  @fail="fail"
+				/>
 			</uni-forms-item>
-
 		</uni-forms>
 		<view class="jump-next-area">
 			<button class="jump-next submit" size="mini" type="primary" @click="addSub">保存</button>
@@ -54,7 +53,7 @@
 					price:"",
 					title:"",
 					type:"",
-          imgs:[], //{id:0,imgUrl:''url}
+					imgs:[], //{id:0,imgUrl:''url}
 				},
 				range:[
 					{ value: 0, text: "篮球" },
@@ -64,7 +63,6 @@
 			}
 		},
 		mounted() {
-
 		},
 		onLoad(option) {
 			if(option.item){
