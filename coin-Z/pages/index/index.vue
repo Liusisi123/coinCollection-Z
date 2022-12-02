@@ -134,11 +134,11 @@
 				this.getData()
 			},
 			getData(){
-				let params = {
-				          // "phone":this.userphone,
-				          // "name":this.username
+				// let params = {
+				//           // "phone":this.userphone,
+				//           // "name":this.username
 
-				    }
+				//     }
 					// this.pageCurrent = pageCurrent
 				    uni.request({
 						  url: `${this.$baseUrl}/spu/findAll`,
