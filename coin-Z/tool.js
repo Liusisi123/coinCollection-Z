@@ -8,7 +8,7 @@ export function getAliOosClient(bucket) {
 		return aliOssClient[bucket];
 	} else {
 		aliOssClient[[bucket]] = axios
-			.get(`http://localhost:3000/spu/get_ali_img_upload_signature`,)
+			.get(`http://170.106.8.145:3000/spu/get_ali_img_upload_signature`,)
 			.then(res => {
 				console.log('res',res);
 				res = res.data;
@@ -21,7 +21,7 @@ export function getAliOosClient(bucket) {
 						// 	`http://170.106.8.145:3000/spu/get_ali_img_upload_signature`,
 						// );
 						const info = await axios.get(
-							`http://localhost:3000/spu/get_ali_img_upload_signature`,
+							`http://170.106.8.145:3000/spu/get_ali_img_upload_signature`,
 						);
 						
 						console.log('info',info);
