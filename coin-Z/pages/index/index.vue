@@ -41,6 +41,7 @@
 						<uni-td align="center">{{ item.type }}</uni-td>
 						<uni-td align="center">{{ dateFormat(item.create_time) }}</uni-td>
 						<uni-td align="center">{{ dateFormat(item.update_time) }}</uni-td>
+						<uni-td align="center">{{ item.typeId }}</uni-td>
 						<uni-td align="center">{{ item.status }}</uni-td>
 						<uni-td align="center">
 							<view class="uni-group">
@@ -51,7 +52,7 @@
 					</uni-tr>
 			</uni-table>
 			<view class="footer uni-pagination-box">
-				<uni-pagination 
+				<uni-pagination
 					show-icon
 				    @change="handleCurrentChange"
 				    :current="pageIndex"
@@ -63,7 +64,7 @@
 	</view>
 </template>
 
-<script> 
+<script>
 	export default {
 		data() {
 			return {
@@ -78,7 +79,7 @@
 					spuName: "",
 					price: ""
 				},
-				
+
 			}
 		},
 		onShow(){
@@ -130,12 +131,12 @@
 			seach(){
 				this.pageIndex = 1,
 				this.getData()
-			},	
+			},
 			getData(){
 				let params = {
 				          // "phone":this.userphone,
 				          // "name":this.username
-				
+
 				    }
 					// this.pageCurrent = pageCurrent
 				    uni.request({
@@ -148,7 +149,7 @@
 							  this.getShowTableData();
 						  },
 						  fail: (err)=>{}
-				    })  
+				    })
 			},
 			jumpSecondPage(){
 				uni.navigateTo({
