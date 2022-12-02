@@ -191,7 +191,7 @@
 						"desc": this.form.desc,
 						"type": this.form.type,
 						"imgs": this.form.imgs,
-						mainUrl,
+						"mainUrl":mainUrl,
 					}
 					uni.request({
 						url: `${this.$baseUrl}/spu/create`,
