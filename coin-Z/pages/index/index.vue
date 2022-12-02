@@ -39,8 +39,8 @@
 						<uni-td align="center">{{ item.title }}</uni-td>
 						<uni-td align="center">{{ item.desc }}</uni-td>
 						<uni-td align="center">{{ item.type }}</uni-td>
-						<uni-td align="center">{{ item.create_time | t }}</uni-td>
-						<uni-td align="center">{{ item.update_time | t }}</uni-td>
+						<uni-td align="center">{{ dateFormat(item.create_time) }}</uni-td>
+						<uni-td align="center">{{ dateFormat(item.update_time) }}</uni-td>
 						<uni-td align="center">{{ item.status }}</uni-td>
 						<uni-td align="center">
 							<view class="uni-group">
@@ -64,10 +64,6 @@
 </template>
 
 <script> 
-	function getTime(time){
-		let d = new Date(time);
-		return d.getFullYear() +'-'+ (d.getMonth()+1) +'-'+ d.getDate()+ ' ' + d.getHours() + ":" + d.getMinutes() +":"+ d.getSeconds();
-	}
 	export default {
 		data() {
 			return {
@@ -94,14 +90,13 @@
 		mounted() {
 			this.getData()
 		},
-		
-		filters: {
-			t(time){
-				return getTime(time)
-			}
-		},
 		methods: {
-		 getShowTableData() {
+			 dateFormat(time) {
+				let data = time.substr(0, 19); 
+				let newDate = data.replace(/T/g, ' ')
+				return newDate
+			},
+			getShowTableData() {
 			  // 5. 获取截取开始索引
 			  let begin = (this.pageIndex - 1) * this.pageSize;
 			  // 6. 获取截取结束索引
