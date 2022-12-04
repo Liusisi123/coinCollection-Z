@@ -1,6 +1,8 @@
 const OSS = require('ali-oss');
 import axios from 'axios';
 
+export const baseUrl = 'http://170.106.8.145:3000'
+
 let aliOssClient = {};
 
 export function getAliOosClient(bucket) {
@@ -8,7 +10,7 @@ export function getAliOosClient(bucket) {
 		return aliOssClient[bucket];
 	} else {
 		aliOssClient[[bucket]] = axios
-			.get(`http://170.106.8.145:3000/spu/get_ali_img_upload_signature`,)
+			.get(`${baseUrl}/spu/get_ali_img_upload_signature`,)
 			.then(res => {
 				console.log('res',res);
 				res = res.data;
@@ -21,7 +23,7 @@ export function getAliOosClient(bucket) {
 						// 	`http://170.106.8.145:3000/spu/get_ali_img_upload_signature`,
 						// );
 						const info = await axios.get(
-							`http://170.106.8.145:3000/spu/get_ali_img_upload_signature`,
+							`${baseUrl}/spu/get_ali_img_upload_signature`,
 						);
 						
 						console.log('info',info);
@@ -34,7 +36,7 @@ export function getAliOosClient(bucket) {
 					},
 					refreshSTSTokenInterval: 10000,
 					bucket: bucket,
-					region: 'oss-us-east-1',
+					region: 'oss-cn-beijing',
 				});
 			});
 		return aliOssClient[bucket];
@@ -76,6 +78,11 @@ export function pickerOptions() {
 	return pickerOptions;
 }
 
-export function replaceProductName(productName) {
-	return productName.replace(/\s/g, '-');
-}
+export const bwCoinImgcdnUrl = 'https://bwcoin.oss-cn-beijing.aliyuncs.com/';
+// //枚举数据
+// export function enumerationData(obj,key) {
+// 	console.log('obj,key',obj,key);
+// 	if (key === undefined || key === null) return '--'
+// 	  if (!(obj instanceof Object)) return
+// 	  return obj[key]
+// }

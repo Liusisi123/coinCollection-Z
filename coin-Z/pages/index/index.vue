@@ -15,35 +15,32 @@
 		<view class="content">
 			<uni-table ref="table" border stripe type="selection" @selection-change="selectionChange">
 					<uni-tr>
-						<uni-th width="150" align="center">url</uni-th>
-						<uni-th width="150" align="center">商品图片</uni-th>
-						<uni-th width="150" align="center">ID</uni-th>
+						<uni-th width="50" align="center">序号</uni-th>
+						<uni-th width="150" align="center">商品主图片</uni-th>
 						<uni-th align="center">商品名称</uni-th>
 						<uni-th align="center">价格</uni-th>
-						<uni-th align="center">标题</uni-th>
+						<!-- <uni-th align="center">标题</uni-th> -->
 						<uni-th align="center">描述</uni-th>
 						<uni-th align="center">所属分类</uni-th>
 						<uni-th align="center">新建时间</uni-th>
 						<uni-th align="center">更新时间</uni-th>
-						<uni-th align="center">商品状态</uni-th>
-						<uni-th width="204" align="center">设置</uni-th>
+						<!-- <uni-th align="center">商品状态</uni-th> -->
 						<uni-th align="center">操作</uni-th>
 					</uni-tr>
 					<uni-tr v-for="(item, index) in showTableData" :key="index">
-						<uni-td align="center">{{ item.url }}</uni-td>
+						<uni-td align="center">{{ index + 1 }}</uni-td>
 						<uni-td align="center">
-							<image style="width: 120rpx;height: 120rpx;" :src="item.mainUrl" mode=""></image>
+							<image style="width: 120rpx;height: 120rpx;" :src="typeof(item.mainUrl) == 'string'?(bwCoinCDNUrl + item.mainUrl):URL.createObjectURL(item.mainUrl.file)" mode=""></image>
 						</uni-td>
-						<uni-td align="center">{{ item.spuCode }}</uni-td>
 						<uni-td align="center">{{ item.spuName }}</uni-td>
 						<uni-td align="center">{{ item.price }}</uni-td>
-						<uni-td align="center">{{ item.title }}</uni-td>
+						<!-- <uni-td align="center">{{ item.title }}</uni-td> -->
 						<uni-td align="center">{{ item.desc }}</uni-td>
-						<uni-td align="center">{{ item.type }}</uni-td>
-						<uni-td align="center">{{ dateFormat(item.create_time) }}</uni-td>
-						<uni-td align="center">{{ dateFormat(item.update_time) }}</uni-td>
-						<uni-td align="center">{{ item.typeId }}</uni-td>
-						<uni-td align="center">{{ item.status }}</uni-td>
+						
+						<uni-td align="center">{{ dealCodeToName(spuAllTypeOptsMixins,item.type) }}</uni-td>
+					<uni-td align="center">{{ dateFormat(item.create_time) }}</uni-td>
+					<uni-td align="center">{{ dateFormat(item.update_time) }}</uni-td>
+						<!-- <uni-td align="center">{{ item.status }}</uni-td> -->
 						<uni-td align="center">
 							<view class="uni-group">
 								<button class="uni-button" size="mini" type="primary" @click="edit(item)">修改</button>
@@ -66,9 +63,13 @@
 </template>
 
 <script>
+import { getAliOosClient, bwCoinImgcdnUrl } from '../../tool.js';
+import { spuAllTypeMixins } from '../mixins/dictionaryOpts.js'
 	export default {
+		mixins: [ spuAllTypeMixins ],
 		data() {
 			return {
+				bwCoinCDNUrl: bwCoinImgcdnUrl,
 				pageIndex: 1, // 第几页
 				pageSize: 5, // 每页几条数据
 				total: 0, // 总条目数
@@ -80,6 +81,7 @@
 					spuName: "",
 					price: ""
 				},
+				typeOpts:[],
 
 			}
 		},
@@ -91,9 +93,23 @@
 			},
 		mounted() {
 			this.getData()
+			// 获取类型
+			this.initspuAllTypeOptsMixins()
+			
 		},
 		methods: {
-			 dateFormat(time) {
+			// 处理数组对象[{}]为对象{} 返回类型名称
+			dealCodeToName(opts,code){
+				let arr = opts;
+				let obj = {};
+				for (let i = 0; i < arr.length; i ++) {
+					let key = arr[i]
+				    obj[key.value] = key.realName
+				}
+				console.log('obj',obj)
+				return obj[code]
+			},
+			dateFormat(time) {
 				let data = time.substr(0, 19); 
 				let newDate = data.replace(/T/g, ' ')
 				return newDate
@@ -104,7 +120,7 @@
 			  // 6. 获取截取结束索引
 			  let end = this.pageIndex * this.pageSize;
 			  // 7. 通过索引去截取，从而展示
-			  this.showTableData = this.tableData.slice(begin, end);
+			  this.showTableData = this.tableData?.slice(begin, end);
 			},
 			// 8. 页数改变，重新截取
 			handleCurrentChange(e) {
@@ -154,7 +170,7 @@
 			},
 			jumpSecondPage(){
 				uni.navigateTo({
-					url:'add/add',
+					url:'add',
 					fail: (error) => {
 						console.log(error)
 					}
@@ -162,8 +178,14 @@
 			},
 			edit(item){
 				console.log("item",item)
+				// uni.navigateTo({
+				// 	url:`add/add?item=${encodeURIComponent(JSON.stringify(item))}`,
+				// 	fail: (error) => {
+				// 		console.log(error)
+				// 	}
+				// })
 				uni.navigateTo({
-					url:`add/add?item=${encodeURIComponent(JSON.stringify(item))}`,
+					url:`update?code=${item.spuCode}`,
 					fail: (error) => {
 						console.log(error)
 					}

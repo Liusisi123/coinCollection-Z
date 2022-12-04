@@ -15,12 +15,12 @@
 				<uni-easyinput style="width: 400rpx" type="text" v-model="form.price" placeholder="请输入价格">
 				</uni-easyinput>
 			</uni-forms-item>
-			<uni-forms-item label="标题:" name="desc">
+			<uni-forms-item label="描述:" name="desc">
 				<uni-easyinput style="width: 400rpx" type="text" v-model="form.desc" placeholder="请输入标题">
 				</uni-easyinput>
 			</uni-forms-item>
 			<uni-forms-item label="所属分类:" name="type">
-				<uni-data-select style="width: 400rpx" v-model="form.type" :localdata="typeOpts" @change="changeType">
+				<uni-data-select style="width: 400rpx" v-model="form.type" :localdata="spuAllTypeOptsMixins" @change="changeType">
 				</uni-data-select>
 			</uni-forms-item>
 			<uni-forms-item label="上传主页图:" name="mainUrl">
@@ -45,8 +45,10 @@
 </template>
 
 <script>
-import { getAliOosClient } from '../../../tool.js';
+import { getAliOosClient, bwCoinImgcdnUrl } from '../../../tool.js';
+import { spuAllTypeMixins } from '../../mixins/dictionaryOpts.js'
 	export default {
+		mixins: [ spuAllTypeMixins ],
 		data() {
 			return {
 				msgType: 'success',
@@ -64,7 +66,7 @@ import { getAliOosClient } from '../../../tool.js';
 			}
 		},
 		mounted() {
-			this.getTypeRange()
+			this.initspuAllTypeOptsMixins()
 		},
 		onLoad(option) {
 			if (option.item) {
@@ -101,19 +103,31 @@ import { getAliOosClient } from '../../../tool.js';
 					})
 		
 				} else {
-					this.form.imgs = this.form.imgs.map((item, index) => {
-						return {
-							imgUrl: item.url
+					let list = this.form.imgs
+					console.log('list',list);
+					for (let i = 0; i < list.length; i++) {
+						console.log('list[i]',list[i]);
+						if (typeof list[i] === 'object') {
+							const client = await getAliOosClient('bwcoin'); //新建存放图片的文件夹
+							const file = list[i];
+							console.log('file',file);
+							const result = await client.put(
+								'spu-imgs-'+ this.form.spuName.replace(/\s/g, '-') + i +  '.' + file.extname,
+								file.file,
+							);
+							console.log('result',result);
+							list[i] = {
+								imgUrl : result.name
+							};
 						}
-					})
-					// const mainUrl = this.form.mainUrl?.length ? this.form.mainUrl[0]?.url : ''
+					}
 					console.log('typeof this.form.mainUrl',typeof this.form.mainUrl);
 					if (typeof this.form.mainUrl === 'object') {
-						const client = await getAliOosClient('ruigeactivity');
+						const client = await getAliOosClient('bwcoin'); //新建存放图片的文件夹 bwcoin
 						const file = this.form.mainUrl;
 						console.log('file',file);
 						const result = await client.put(
-							'spu-' + this.form.spuName.replace(/\s/g, '-') + '.' +file[0].extname,
+							'spu-main-url-' + this.form.spuName.replace(/\s/g, '-') + '.' +file[0].extname,
 							file[0].file,
 						);
 						console.log('result',result);
