@@ -118,6 +118,7 @@ import Api from '../../api/spu/index.js'
 					console.log('this.form.mainUrl',this.form.mainUrl);
 					this.form.imgs = res.imgs.map((_) => {
 						return {
+							fileID: _.id,
 							id: _.id,
 							url: this.bwCoinCDNUrl + _.imgUrl,
 							imgUrl: _.imgUrl,
@@ -131,7 +132,6 @@ import Api from '../../api/spu/index.js'
 				let mainUrl = this.form.mainUrl
 				console.log('imgs---', imgs);
 				console.log('mainUrl', mainUrl);
-				return
 				const client = await getAliOosClient('bwcoin'); //新建存放图片的文件夹
 				if (
 					mainUrl && mainUrl[0].file
@@ -169,6 +169,12 @@ import Api from '../../api/spu/index.js'
 							imgs[i] = {
 								id: 0,
 								imgUrl : result.name
+							};
+						} else {
+							let img = imgs[i].url.replace('https://bwcoin.oss-cn-beijing.aliyuncs.com/','')
+							imgs[i] = {
+								id: imgs[i].fileID,
+								imgUrl : img
 							};
 						}
 					}),
@@ -408,17 +414,6 @@ import Api from '../../api/spu/index.js'
 				let index = this.form.imgs.findIndex((item)=>{e.tempFilePath === item.url})
 				this.form.imgs.splice(index,1)
 				console.log('this.form.imgs',this.form.imgs);
-				// if (typeof file.file == 'string') {
-				// 	this.fenleiItem.files.splice(
-				// 		this.fenleiItem.files.findIndex((_) => _.id == file.id),
-				// 		1,
-				// 	);
-				// } else {
-				// 	this.fenleiItem.files.splice(
-				// 		this.fenleiItem.files.findIndex((_) => _.uid == file.uid),
-				// 		1,
-				// 	);
-				// }
 			},
 
 			// 获取上传进度
