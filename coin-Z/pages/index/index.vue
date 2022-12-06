@@ -42,7 +42,6 @@
 						<uni-td align="center">{{ dealCodeToName(spuAllTypeOptsMixins,item.type) }}</uni-td>
 						<uni-td align="center">{{ item.dailySpecial}}</uni-td>
 						<uni-td align="center">{{ item.dailyRecommend}}</uni-td>
-						<uni-td align="center">{{ dealCodeToName(spuAllTypeOptsMixins,item.type) }}</uni-td>
 						<uni-td align="center">{{ dateFormat(item.create_time) }}</uni-td>
 						<uni-td align="center">{{ dateFormat(item.update_time) }}</uni-td>
 						<!-- <uni-td align="center">{{ item.status }}</uni-td> -->
