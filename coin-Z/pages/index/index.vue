@@ -22,6 +22,8 @@
 						<!-- <uni-th align="center">标题</uni-th> -->
 						<uni-th align="center">描述</uni-th>
 						<uni-th align="center">所属分类</uni-th>
+						<uni-th align="center">是否天天特价</uni-th>
+						<uni-th align="center">是否每日推荐</uni-th>
 						<uni-th align="center">新建时间</uni-th>
 						<uni-th align="center">更新时间</uni-th>
 						<!-- <uni-th align="center">商品状态</uni-th> -->
@@ -38,8 +40,11 @@
 						<uni-td align="center">{{ item.desc }}</uni-td>
 						
 						<uni-td align="center">{{ dealCodeToName(spuAllTypeOptsMixins,item.type) }}</uni-td>
-					<uni-td align="center">{{ dateFormat(item.create_time) }}</uni-td>
-					<uni-td align="center">{{ dateFormat(item.update_time) }}</uni-td>
+						<uni-td align="center">{{ item.dailySpecial}}</uni-td>
+						<uni-td align="center">{{ item.dailyRecommend}}</uni-td>
+						<uni-td align="center">{{ dealCodeToName(spuAllTypeOptsMixins,item.type) }}</uni-td>
+						<uni-td align="center">{{ dateFormat(item.create_time) }}</uni-td>
+						<uni-td align="center">{{ dateFormat(item.update_time) }}</uni-td>
 						<!-- <uni-td align="center">{{ item.status }}</uni-td> -->
 						<uni-td align="center">
 							<view class="uni-group">

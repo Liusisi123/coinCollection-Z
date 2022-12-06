@@ -23,6 +23,14 @@
 				<uni-data-select style="width: 400rpx" v-model="form.type" :localdata="spuAllTypeOptsMixins" @change="changeType">
 				</uni-data-select>
 			</uni-forms-item>
+			<uni-forms-item label="是否选为天天特价:" name="dailySpecial">
+				<uni-data-select style="width: 400rpx" v-model="form.dailySpecial" :localdata="yesOrNoOpts" >
+				</uni-data-select>
+			</uni-forms-item>
+			<uni-forms-item label="是否选为每日推荐:" name="dailyRecommend">
+				<uni-data-select style="width: 400rpx" v-model="form.dailyRecommend" :localdata="yesOrNoOpts"  >
+				</uni-data-select>
+			</uni-forms-item>
 			<uni-forms-item label="上传主页图:" name="mainUrl">
 				<uni-file-picker v-model="form.mainUrl" fileMediatype="image" :del-icon="false" disable-preview  @select="selectMain" ref="uploadMain" limit="1" />
 			</uni-forms-item>
@@ -66,7 +74,17 @@ import Api from '../../api/spu/index.js'
 					mainUrl: [], // 主图
 					imgs: [], //{id:0,imgUrl:''url}
 				},
-				typeOpts: [],
+				yesOrNoOpts: [
+					{
+						text:'是',
+						value:'YES'
+					},
+					{
+						text:'否',
+						value:'NO'
+					}
+				],
+				
 			}
 		},
 		mounted() {
@@ -130,8 +148,6 @@ import Api from '../../api/spu/index.js'
 			async addSub() {
 				let imgs = this.form.imgs
 				let mainUrl = this.form.mainUrl
-				console.log('imgs---', imgs);
-				console.log('mainUrl', mainUrl);
 				const client = await getAliOosClient('bwcoin'); //新建存放图片的文件夹
 				if (
 					mainUrl && mainUrl[0].file
@@ -180,40 +196,13 @@ import Api from '../../api/spu/index.js'
 					}),
 				);
 				console.log('imgs',imgs);
-						
-				// for (let i = 0; i < imgs.length; i++) {
-				// 	console.log('imgs[i]----',imgs[i]);
-				// 	if (typeof imgs[i] === 'object') {
-				// 		const file = imgs[i];
-				// 		console.log('file----',file);
-				// 		const result = await client.put(
-				// 			'spu-imgs-'+ this.form.spuName.replace(/\s/g, '-') + i +  '.' + file.extname,
-				// 			file.file,
-				// 		);
-				// 		console.log('result-----',result);
-				// 		imgs[i] = {
-				// 			id: 0,
-				// 			imgUrl : result.name
-				// 		};
-				// 	}
-				// }
-				// console.log('typeof this.form.mainUrl',typeof this.form.mainUrl);
-				// if (typeof this.form.mainUrl === 'object') {
-				// 	const client = await getAliOosClient('bwcoin'); //新建存放图片的文件夹 bwcoin
-				// 	const file = this.form.mainUrl;
-				// 	console.log('file',file);
-				// 	const result = await client.put(
-				// 		'spu-main-url-' + this.form.spuName.replace(/\s/g, '-') + '.' +file[0].extname,
-				// 		file[0].file,
-				// 	);
-				// 	console.log('result',result);
-				// 	this.form.mainUrl = [result.name];
-				// }
 				let params = {
 					"spuName": this.form.spuName,
 					"price": this.form.price,
 					"desc": this.form.desc,
 					"type": this.form.type,
+					"dailySpecial": this.form.dailySpecial,
+					"dailyRecommend": this.form.dailyRecommend,
 					"imgs": this.form.imgs,
 					"mainUrl":this.form.mainUrl[0],
 				}
@@ -230,24 +219,6 @@ import Api from '../../api/spu/index.js'
 							})
 						}, 2000)
 					})
-					// uni.request({
-					// 	url: `${this.$baseUrl}/spu/update`,
-					// 	method: 'POST',
-					// 	data: params,
-					// 	success: (res) => {
-					// 		// if(res){
-					// 		uni.showToast({
-					// 			title: '编辑成功'
-					// 		})
-					// 		setTimeout(function() {
-					// 			uni.navigateBack({
-					// 				delta: 1,
-					// 			})
-					// 		}, 2000)
-					// 		// }
-					// 	},
-					// 	fail: (err) => {}
-					// })
 					
 				} else {
 					console.log('params',params);
@@ -261,26 +232,6 @@ import Api from '../../api/spu/index.js'
 							})
 						}, 2000)
 					})
-					// uni.request({
-					// 	url: `${this.$baseUrl}/spu/create`,
-					// 	method: 'POST',
-					// 	data: params,
-					// 	success: (res) => {
-					// 		if (res) {
-					// 			uni.showToast({
-					// 				title: '新增成功'
-					// 			})
-					// 			setTimeout(function() {
-					// 				uni.navigateBack({
-					// 					delta: 1,
-					// 				}, 2000)
-					// 			})
-					// 		}
-					// 	},
-					// 	fail: (err) => {
-					// 		console.log('err',err);
-					// 	}
-					// })
 				}
 			},
 			
