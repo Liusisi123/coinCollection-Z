@@ -1,19 +1,20 @@
 <template>
 	<view class="view">
-		<uni-forms :modelValue="formData" label-position="left" :inline="true" label-width="80px">
-			<uni-forms-item label="商品名称:" name="spuName">
-				<uni-easyinput style="width: 200px" type="text" v-model="formData.spuName" placeholder="请输入商品名称"></uni-easyinput>
-			</uni-forms-item>
-			<uni-forms-item label="标题:" name="price">
-				<uni-easyinput style="width: 200px" type="text" v-model="formData.price" placeholder="请输入标题"></uni-easyinput>
-			</uni-forms-item>
-		</uni-forms>
-		<view class="jump-next-area">
-				<button @click="jumpSecondPage" class="jump-next" size="mini" type="primary">新增</button>
-				<button @click="seach" class="jump-next" size="mini" type="primary">搜索</button>
-		</view>
-		<view class="content">
-			<uni-table ref="table" border stripe type="selection" @selection-change="selectionChange">
+		<uni-card>
+			<uni-forms :modelValue="formData" label-position="left" label-width="80px">
+				<uni-forms-item label="商品名称:" name="spuName">
+					<uni-easyinput style="width: 200px" type="text" v-model="formData.spuName" placeholder="请输入商品名称"></uni-easyinput>
+				</uni-forms-item>
+				<uni-forms-item label="标题:" name="price">
+					<uni-easyinput style="width: 200px" type="text" v-model="formData.price" placeholder="请输入标题"></uni-easyinput>
+				</uni-forms-item>
+			</uni-forms>
+			<view class="jump-next-area">
+					<button @click="jumpSecondPage" class="jump-next" size="mini" type="primary">新增</button>
+					<button @click="seach" class="jump-next" size="mini" type="primary">搜索</button>
+			</view>
+			<view class="content">
+			<uni-table emptyText="暂无更多数据" ref="table" border stripe type="selection" @selection-change="selectionChange" style="width:100%; height:420px; overflow:scroll;">
 					<uni-tr>
 						<uni-th width="50" align="center">序号</uni-th>
 						<uni-th width="150" align="center">商品主图片</uni-th>
@@ -63,6 +64,7 @@
 					/>
 			</view>
 		</view>
+		</uni-card>
 	</view>
 </template>
 

@@ -1,54 +1,56 @@
 <template>
 	<view class="view">
-		<view style="font-size: 16px; font-weight: bold;" class="" v-if="['update'].includes(type)">
-			编辑
-		</view>
-		<view style="font-size: 16px; font-weight: bold;" class="" v-else>
-			新增
-		</view>
-		<uni-forms :modelValue="form" label-position="left" label-width="100px">
-			<uni-forms-item label="商品名称:" name="spuName">
-				<uni-easyinput style="width: 400rpx" type="text" v-model="form.spuName" placeholder="请输入商品名称">
-				</uni-easyinput>
-			</uni-forms-item>
-			<uni-forms-item label="价格:" name="price">
-				<uni-easyinput style="width: 400rpx" type="text" v-model="form.price" placeholder="请输入价格">
-				</uni-easyinput>
-			</uni-forms-item>
-			<uni-forms-item label="描述:" name="desc">
-				<uni-easyinput style="width: 400rpx" type="text" v-model="form.desc" placeholder="请输入标题">
-				</uni-easyinput>
-			</uni-forms-item>
-			<uni-forms-item label="所属分类:" name="type">
-				<uni-data-select style="width: 400rpx" v-model="form.type" :localdata="spuAllTypeOptsMixins" @change="changeType">
-				</uni-data-select>
-			</uni-forms-item>
-			<uni-forms-item label="是否选为天天特价:" name="dailySpecial">
-				<uni-data-select style="width: 400rpx" v-model="form.dailySpecial" :localdata="yesOrNoOpts" >
-				</uni-data-select>
-			</uni-forms-item>
-			<uni-forms-item label="是否选为每日推荐:" name="dailyRecommend">
-				<uni-data-select style="width: 400rpx" v-model="form.dailyRecommend" :localdata="yesOrNoOpts"  >
-				</uni-data-select>
-			</uni-forms-item>
-			<uni-forms-item label="上传主页图:" name="mainUrl">
-				<uni-file-picker v-model="form.mainUrl" fileMediatype="image" :del-icon="false" disable-preview  @select="selectMain" ref="uploadMain" limit="1" />
-			</uni-forms-item>
-			<uni-forms-item label="上传详情图:" name="type">
-				<uni-file-picker v-model="form.imgs" fileMediatype="image" mode="grid" @select="select"
-					@progress="progress" @success="success" @delete="deletephoto" @fail="fail" ref="upload" limit="9" />
-			</uni-forms-item>
-		</uni-forms>
-		<view class="jump-next-area">
-			<button class="jump-next submit" size="mini" type="primary" @click="addSub">保存</button>
-			<button class="jump-next submit" size="mini" type="primary" @click="handleBut">取消</button>
-		</view>
-		<view>
+		<uni-card>
+			<view style="font-size: 16px; font-weight: bold; border-left:3px solid blue;" class="" v-if="['update'].includes(type)">
+				编辑
+			</view>
+			<view style="font-size: 16px; font-weight: bold; border-left:3px solid blue;" class="" v-else>
+				新增
+			</view>
+			<uni-forms :modelValue="form" label-position="left" label-width="150px">
+				<uni-forms-item label="商品名称:" name="spuName">
+					<uni-easyinput style="width: 400rpx" type="text" v-model="form.spuName" placeholder="请输入商品名称">
+					</uni-easyinput>
+				</uni-forms-item>
+				<uni-forms-item label="价格:" name="price">
+					<uni-easyinput style="width: 400rpx" type="text" v-model="form.price" placeholder="请输入价格">
+					</uni-easyinput>
+				</uni-forms-item>
+				<uni-forms-item label="描述:" name="desc">
+					<uni-easyinput style="width: 400rpx" type="text" v-model="form.desc" placeholder="请输入标题">
+					</uni-easyinput>
+				</uni-forms-item>
+				<uni-forms-item label="所属分类:" name="type">
+					<uni-data-select style="width: 400rpx" v-model="form.type" :localdata="spuAllTypeOptsMixins" @change="changeType">
+					</uni-data-select>
+				</uni-forms-item>
+				<uni-forms-item label="是否选为天天特价:" name="dailySpecial">
+					<uni-data-select style="width: 400rpx" v-model="form.dailySpecial" :localdata="yesOrNoOpts" >
+					</uni-data-select>
+				</uni-forms-item>
+				<uni-forms-item label="是否选为每日推荐:" name="dailyRecommend">
+					<uni-data-select style="width: 400rpx" v-model="form.dailyRecommend" :localdata="yesOrNoOpts"  >
+					</uni-data-select>
+				</uni-forms-item>
+				<uni-forms-item label="上传主页图:" name="mainUrl">
+					<uni-file-picker v-model="form.mainUrl" fileMediatype="image" :del-icon="false" disable-preview  @select="selectMain" ref="uploadMain" limit="1" />
+				</uni-forms-item>
+				<uni-forms-item label="上传详情图:" name="type">
+					<uni-file-picker v-model="form.imgs" fileMediatype="image" mode="grid" @select="select"
+						@progress="progress" @success="success" @delete="deletephoto" @fail="fail" ref="upload" limit="9" />
+				</uni-forms-item>
+			</uni-forms>
+			<view class="jump-next-area">
+				<button class="jump-next submit" size="mini" type="primary" @click="addSub">保存</button>
+				<button class="jump-next submit" size="mini" type="primary" @click="handleBut">取消</button>
+			</view>
+			<view>
 			<!-- 提示信息弹窗 -->
 			<uni-popup ref="message" type="message">
 				<uni-popup-message :type="msgType" :message="messageText" :duration="2000"></uni-popup-message>
 			</uni-popup>
 		</view>
+		</uni-card>
 	</view>
 </template>
 
