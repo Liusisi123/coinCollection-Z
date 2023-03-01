@@ -4,13 +4,44 @@
 			<uni-forms-item label="商品名称:" name="spuName">
 				<uni-easyinput style="width: 200px" type="text" v-model="formData.spuName" placeholder="请输入商品名称"></uni-easyinput>
 			</uni-forms-item>
-			<uni-forms-item label="标题:" name="price">
+<!-- 			<uni-forms-item label="标题:" name="price">
 				<uni-easyinput style="width: 200px" type="text" v-model="formData.price" placeholder="请输入标题"></uni-easyinput>
-			</uni-forms-item>
+			</uni-forms-item> -->
 		</uni-forms>
 		<view class="jump-next-area">
 				<button @click="jumpSecondPage" class="jump-next" size="mini" type="primary">新增</button>
 				<button @click="seach" class="jump-next" size="mini" type="primary">搜索</button>
+				<span @click="changeTableList()">按分类展示</span>
+		</view>
+		<view class="contnet" v-if="showTypeListFlag">
+			<uni-section title="按分类展示" type="line">
+			<uni-collapse  v-for="(ii,ix) in typeOpts" :key="ix" accordion v-model="accordionVal" @change="change">
+				<!-- <uni-collapse-item :title="dealCodeToName(spuAllTypeOptsMixins,ii.value)">
+					<view class="content" v-for="(item,index) in ii.value" :key="index" >
+						<uni-card :title="item.spuName" :sub-title="subTitle(item)" :extra="item.price" 
+						:thumbnail="typeof(item.mainUrl) == 'string'?(bwCoinCDNUrl + item.mainUrl):URL.createObjectURL(item.mainUrl.file)" 
+						@click="edit(item)">
+							<text class="uni-body">{{item.desc}}</text>
+						</uni-card>
+					</view>
+				</uni-collapse-item> -->
+				<!-- <uni-collapse-item :title="dealCodeToName(spuAllTypeOptsMixins,item.type)">
+					<view class="content">
+						<uni-card :title="item.spuName" :sub-title="subTitle(item)" :extra="item.price" :thumbnail="typeof(item.mainUrl) == 'string'?(bwCoinCDNUrl + item.mainUrl):URL.createObjectURL(item.mainUrl.file)" @click="edit(item)">
+							<text class="uni-body">{{item.desc}}</text>
+						</uni-card>
+					</view>
+				</uni-collapse-item> -->
+			</uni-collapse>
+		</uni-section>
+		</view>
+		<view class="content">
+			<uni-section v-for="(item, index) in showTableData" :key="index" :title="dealCodeToName(spuAllTypeOptsMixins,item.type)" type="line" >
+				<uni-card :title="item.spuName" :sub-title="subTitle(item)" :extra="item.price" :thumbnail="typeof(item.mainUrl) == 'string'?(bwCoinCDNUrl + item.mainUrl):URL.createObjectURL(item.mainUrl.file)" @click="edit(item)">
+					<text class="uni-body">{{item.desc}}</text>
+				</uni-card>
+			</uni-section>
+
 		</view>
 		<view class="content">
 			<uni-table ref="table" border stripe type="selection" @selection-change="selectionChange">
@@ -38,7 +69,7 @@
 						<uni-td align="center">{{ item.price }}</uni-td>
 						<!-- <uni-td align="center">{{ item.title }}</uni-td> -->
 						<uni-td align="center">{{ item.desc }}</uni-td>
-						
+
 						<uni-td align="center">{{ dealCodeToName(spuAllTypeOptsMixins,item.type) }}</uni-td>
 						<uni-td align="center">{{ item.dailySpecial}}</uni-td>
 						<uni-td align="center">{{ item.dailyRecommend}}</uni-td>
@@ -73,12 +104,15 @@ import { spuAllTypeMixins } from '../mixins/dictionaryOpts.js'
 		mixins: [ spuAllTypeMixins ],
 		data() {
 			return {
+				accordionVal:'',
+				showTypeListFlag: false, //是否开启分类展示
 				bwCoinCDNUrl: bwCoinImgcdnUrl,
 				pageIndex: 1, // 第几页
 				pageSize: 5, // 每页几条数据
 				total: 0, // 总条目数
 				tableData: [], // 所有的数据
 				showTableData: [], // 当前展示的数据
+				showTableTypeList:{}, // 按分类展示列表
 				searchVal: '',
 				title: 'index',
 				formData: {
@@ -97,11 +131,28 @@ import { spuAllTypeMixins } from '../mixins/dictionaryOpts.js'
 			},
 		mounted() {
 			this.getData()
+			this.getTypeRange()
 			// 获取类型
 			this.initspuAllTypeOptsMixins()
-			
+
 		},
 		methods: {
+
+			// 按分类展示
+			changeTableList(){
+				this.showTypeListFlag = !this.showTypeListFlag
+			},
+			//处理副标题 - 展示为标签
+			subTitle(item){
+				let str = ''
+				if(item.dailySpecial){
+					str += '#天天特价'
+				}
+				if(item.dailyRecommend){
+					str += ' #每日推荐'
+				}
+				return str
+			},
 			// 处理数组对象[{}]为对象{} 返回类型名称
 			dealCodeToName(opts,code){
 				let arr = opts;
@@ -114,9 +165,30 @@ import { spuAllTypeMixins } from '../mixins/dictionaryOpts.js'
 				return obj[code]
 			},
 			dateFormat(time) {
-				let data = time.substr(0, 19); 
+				let data = time.substr(0, 19);
 				let newDate = data.replace(/T/g, ' ')
 				return newDate
+			},
+			// 获取所有类型
+			getTypeRange(){
+				uni.request({
+					url: `${this.$baseUrl}/spu/type`,
+					method: 'POST',
+					// data: ,
+					success: (res) => {
+						if(res){
+							console.log('res.data',res.data);
+							let data = res.data.data
+							this.typeOpts = data.map((item) => {
+								return{
+									text: item.name + '(' + item.id + ')',
+									value: item.id
+								}
+							})
+						}
+					},
+					fail: (err) => {}
+				})
 			},
 			getShowTableData() {
 			  // 5. 获取截取开始索引
@@ -125,6 +197,21 @@ import { spuAllTypeMixins } from '../mixins/dictionaryOpts.js'
 			  let end = this.pageIndex * this.pageSize;
 			  // 7. 通过索引去截取，从而展示
 			  this.showTableData = this.tableData?.slice(begin, end);
+			  this.showTableTypeList = this.dealDataForTypeList(this.showTableData)
+			},
+			dealDataForTypeList(data){
+				let obj = {}
+				for(let i = 0; i < data.length; i++){
+					if(i === 0){
+						obj[data[i].type] = [data[i]]
+					}
+					if(!(data[i].type in obj)){
+						obj[data[i].type] = [data[i]]
+					} else {
+						obj[data[i].type].push(obj[data[i]])
+					}
+				}
+				return obj
 			},
 			// 8. 页数改变，重新截取
 			handleCurrentChange(e) {
@@ -150,19 +237,23 @@ import { spuAllTypeMixins } from '../mixins/dictionaryOpts.js'
 			// 	this.getData(e.current)
 			// },
 			seach(){
-				this.pageIndex = 1,
+				let index = 1
+				this.pageIndex = index,
+				console.log('this.pageIndex',this.pageIndex)
 				this.getData()
 			},
 			getData(){
-				// let params = {
-				//           // "phone":this.userphone,
-				//           // "name":this.username
-
-				//     }
+				let params = {
+				          "spuName":this.formData.spuName,
+				          "price":this.formData.price
+				    }
+					if(!params.spuName) delete params.spuName
+					if(!params.price) delete params.price
 					// this.pageCurrent = pageCurrent
 				    uni.request({
 						  url: `${this.$baseUrl}/spu/findAll`,
 						  method: 'GET',
+						  data: params,
 						  success: (res)=>{
 							  console.log("res",res)
 							  this.tableData = res.data.data
