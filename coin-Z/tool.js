@@ -1,7 +1,7 @@
 const OSS = require('ali-oss');
 import axios from 'axios';
 
-export const baseUrl = 'http://170.106.8.145:3000'
+export const baseUrl = 'https://www.bowencoin.cn'
 
 let aliOssClient = {};
 
